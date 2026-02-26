@@ -100,8 +100,7 @@ export function LoadingScreen({ onStarted }) {
                 </div>
 
                 {/* Percentage text */}
-                <div className="mt-4 w-full flex justify-between text-xs text-slate-500 font-mono">
-                    <span>SYS_MEM</span>
+                <div className="mt-4 w-full flex justify-end text-xs text-slate-500 font-mono">
                     <span>{Math.round(displayProgress)}%</span>
                 </div>
             </div>

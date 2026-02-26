@@ -6,60 +6,101 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 gsap.registerPlugin(ScrollTrigger);
 
 export function CameraController() {
-    const { camera } = useThree();
+    const { camera, scene } = useThree();
     const humTime = useRef(0);
+    const scrollProgress = useRef(0);
 
     useEffect(() => {
-        // Initial Camera Setup
         camera.position.set(0, 0, 7);
 
-        // Context for easy cleanup
         const ctx = gsap.context(() => {
-            // Create the scroll trigger animation for the camera
+            // Master scroll-linked timeline across the full page
             const tl = gsap.timeline({
                 scrollTrigger: {
-                    trigger: '#main-scroll-container', // We'll add this ID to the parent scroll container
+                    trigger: '#main-scroll-container',
                     start: 'top top',
                     end: 'bottom bottom',
-                    scrub: 1, // Smooth scrub
+                    scrub: 1.5,
+                    onUpdate: (self) => {
+                        scrollProgress.current = self.progress;
+                    },
                 }
             });
 
+            // Stage 1: Hero → About (0% - 15%) — Slow zoom in, slight tilt
             tl.to(camera.position, {
-                z: 3, // Zoom in
-                y: -1, // Move slightly down
-                ease: 'power1.inOut',
+                z: 6,
+                y: -0.3,
+                x: 0.5,
+                duration: 15,
+                ease: 'none',
             }, 0);
 
-            // We can also animate rotation for a parallax effect
+            // Stage 2: About → Experience (15% - 30%) — Pan right, look slightly left
+            tl.to(camera.position, {
+                z: 5.5,
+                y: -0.5,
+                x: -0.3,
+                duration: 15,
+                ease: 'none',
+            }, 15);
+
+            // Stage 3: Experience → Skills (30% - 50%) — Pull back, rise up
+            tl.to(camera.position, {
+                z: 5,
+                y: 0.3,
+                x: 0.2,
+                duration: 20,
+                ease: 'none',
+            }, 30);
+
+            // Stage 4: Skills → Projects (50% - 70%) — Zoom in closer, lower angle
+            tl.to(camera.position, {
+                z: 4,
+                y: -0.8,
+                x: -0.2,
+                duration: 20,
+                ease: 'none',
+            }, 50);
+
+            // Stage 5: Projects → Contact (70% - 100%) — Final dramatic push forward
+            tl.to(camera.position, {
+                z: 3,
+                y: -1,
+                x: 0,
+                duration: 30,
+                ease: 'none',
+            }, 70);
+
+            // Camera rotation parallax (subtle continuous tilt as you scroll)
             tl.to(camera.rotation, {
-                x: 0.1, // Look slightly up
+                x: 0.08,
+                duration: 100,
+                ease: 'none',
             }, 0);
         });
 
         return () => ctx.revert();
-    }, [camera]);
+    }, [camera, scene]);
 
-    // Subtle electrical hum / camera shake
+    // Continuous subtle effects
     useFrame((state, delta) => {
         humTime.current += delta;
-        // Base position relies on GSAP scroll trigger manipulation. We modify the actual object matrix directly via lookAt or slight rapid offset so we don't conflict with GSAP positional tweens
+        const t = humTime.current;
 
-        // Very subtle rapid jitter based on time
-        const jitterX = Math.sin(humTime.current * 45) * 0.003;
-        const jitterY = Math.cos(humTime.current * 55) * 0.003;
+        // Gentle breathing sway based on scroll position
+        const breatheIntensity = 0.002 + scrollProgress.current * 0.003;
+        const swayX = Math.sin(t * 0.8) * breatheIntensity;
+        const swayY = Math.cos(t * 0.6) * breatheIntensity;
 
-        // Apply directly adding onto the GSAP managed base value
-        camera.position.x += jitterX;
-        camera.position.y += jitterY;
+        // Micro electrical hum vibration (faster, subtler)
+        const humX = Math.sin(t * 35) * 0.001;
+        const humY = Math.cos(t * 42) * 0.001;
 
-        // Counteract immediately so GSAP base line doesn't permanently drift
-        camera.position.x -= jitterX;
-        camera.position.y -= jitterY;
-
-        // For a cleaner look that doesn't conflict with positional GSAP, we use rotation jitter
-        camera.rotation.z = Math.sin(humTime.current * 30) * 0.001;
+        // Apply rotation-based effects (don't conflict with GSAP position tweens)
+        camera.rotation.z = Math.sin(t * 0.5) * 0.003 + swayX + humX;
+        camera.rotation.y = swayY + humY;
     });
 
-    return null; // This component just handles logic, no rendering
+    return null;
 }

@@ -2,34 +2,160 @@ import { useRef, useMemo } from 'react';
 import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 
+const SHAPES = ['capacitor', 'transformer', 'resistor', 'inductor', 'diode'];
+const COLORS = ['#3b82f6', '#60a5fa', '#06b6d4', '#8b5cf6', '#10b981', '#eab308', '#f59e0b', '#ec4899'];
+
+// Generate 100 random component configs
+function generateComponents(count) {
+    const items = [];
+    for (let i = 0; i < count; i++) {
+        items.push({
+            shape: SHAPES[Math.floor(Math.random() * SHAPES.length)],
+            position: [
+                (Math.random() - 0.5) * 40,
+                (Math.random() - 0.5) * 20,
+                -5 - Math.random() * 25,
+            ],
+            color: COLORS[Math.floor(Math.random() * COLORS.length)],
+            speed: 0.15 + Math.random() * 0.4,
+            rotSpeed: 0.3 + Math.random() * 0.8,
+            scale: 0.4 + Math.random() * 1.2,
+            offset: Math.random() * Math.PI * 2,
+        });
+    }
+    return items;
+}
+
+// Shared materials (created once, reused by all components for performance)
+const matCache = {};
+function getSharedMat(color, opacity = 0.25, emissive = false) {
+    const key = `${color}-${opacity}-${emissive}`;
+    if (!matCache[key]) {
+        matCache[key] = new THREE.MeshStandardMaterial({
+            color,
+            transparent: true,
+            opacity,
+            metalness: 0.7,
+            roughness: 0.3,
+            ...(emissive ? { emissive: color, emissiveIntensity: 0.3 } : {}),
+        });
+    }
+    return matCache[key];
+}
+
+function FloatingComponent({ data }) {
+    const ref = useRef();
+
+    useFrame((state) => {
+        if (!ref.current) return;
+        const t = state.clock.elapsedTime;
+        ref.current.position.y = data.position[1] + Math.sin(t * data.speed + data.offset) * 0.8;
+        ref.current.position.x = data.position[0] + Math.cos(t * data.speed * 0.5 + data.offset) * 0.4;
+        ref.current.rotation.x += data.rotSpeed * 0.008;
+        ref.current.rotation.y += data.rotSpeed * 0.012;
+        ref.current.rotation.z += data.rotSpeed * 0.004;
+    });
+
+    const mat = getSharedMat(data.color, 0.2, true);
+    const matSolid = getSharedMat(data.color, 0.15);
+    const matWire = getSharedMat('#94a3b8', 0.15);
+
+    return (
+        <group ref={ref} position={data.position} scale={data.scale}>
+            {data.shape === 'capacitor' && (
+                <group>
+                    <mesh position={[0, 0, 0.08]} material={mat}>
+                        <boxGeometry args={[0.35, 0.5, 0.025]} />
+                    </mesh>
+                    <mesh position={[0, 0, -0.08]} material={mat}>
+                        <boxGeometry args={[0.35, 0.5, 0.025]} />
+                    </mesh>
+                    <mesh position={[0, 0.38, 0]} material={matWire}>
+                        <cylinderGeometry args={[0.012, 0.012, 0.25]} />
+                    </mesh>
+                    <mesh position={[0, -0.38, 0]} material={matWire}>
+                        <cylinderGeometry args={[0.012, 0.012, 0.25]} />
+                    </mesh>
+                </group>
+            )}
+            {data.shape === 'transformer' && (
+                <group>
+                    <mesh material={matSolid}>
+                        <torusGeometry args={[0.2, 0.05, 6, 6]} />
+                    </mesh>
+                    <mesh position={[-0.2, 0, 0]} rotation={[0, 0, Math.PI / 2]} material={mat}>
+                        <torusGeometry args={[0.1, 0.025, 6, 12]} />
+                    </mesh>
+                    <mesh position={[0.2, 0, 0]} rotation={[0, 0, Math.PI / 2]}>
+                        <torusGeometry args={[0.1, 0.025, 6, 12]} />
+                        <meshStandardMaterial color="#eab308" transparent opacity={0.2} emissive="#eab308" emissiveIntensity={0.3} />
+                    </mesh>
+                </group>
+            )}
+            {data.shape === 'resistor' && (
+                <group>
+                    <mesh material={mat}>
+                        <cylinderGeometry args={[0.07, 0.07, 0.4, 6]} />
+                    </mesh>
+                    <mesh position={[0, 0.08, 0]}>
+                        <cylinderGeometry args={[0.075, 0.075, 0.03, 6]} />
+                        <meshStandardMaterial color="#ef4444" transparent opacity={0.25} />
+                    </mesh>
+                    <mesh position={[0, -0.04, 0]}>
+                        <cylinderGeometry args={[0.075, 0.075, 0.03, 6]} />
+                        <meshStandardMaterial color="#eab308" transparent opacity={0.25} />
+                    </mesh>
+                    <mesh position={[0, 0.32, 0]} material={matWire}>
+                        <cylinderGeometry args={[0.01, 0.01, 0.25]} />
+                    </mesh>
+                    <mesh position={[0, -0.32, 0]} material={matWire}>
+                        <cylinderGeometry args={[0.01, 0.01, 0.25]} />
+                    </mesh>
+                </group>
+            )}
+            {data.shape === 'inductor' && (
+                <group>
+                    <mesh material={mat}>
+                        <torusGeometry args={[0.15, 0.035, 6, 16]} />
+                    </mesh>
+                </group>
+            )}
+            {data.shape === 'diode' && (
+                <group>
+                    <mesh rotation={[0, 0, Math.PI / 2]} material={mat}>
+                        <coneGeometry args={[0.1, 0.2, 3]} />
+                    </mesh>
+                    <mesh position={[0.11, 0, 0]} material={matWire}>
+                        <boxGeometry args={[0.015, 0.2, 0.2]} />
+                    </mesh>
+                </group>
+            )}
+        </group>
+    );
+}
+
 export function ElectricalAtmosphere() {
     const pointsRef = useRef();
     const gridHelperRef = useRef();
 
-    // 1. Particle Spark System 
-    // Generate random positions for subtle glowing sparks floating around
+    const componentData = useMemo(() => generateComponents(100), []);
+
     const particlesCount = 200;
     const posArray = useMemo(() => {
         const positions = new Float32Array(particlesCount * 3);
         for (let i = 0; i < particlesCount * 3; i++) {
-            // distribute them randomly in a 30x30x30 cube area
             positions[i] = (Math.random() - 0.5) * 30;
         }
         return positions;
     }, [particlesCount]);
 
     useFrame((state, delta) => {
-        // Smooth orbit for the sparks
         if (pointsRef.current) {
             pointsRef.current.rotation.y += delta * 0.05;
-            // Subtle electric hum visual (slight, fast jitter)
             const hum = Math.sin(state.clock.elapsedTime * 50) * 0.005;
             pointsRef.current.position.y = hum;
         }
-
-        // Oscilloscope Grid Lines - Scrolling Effect
         if (gridHelperRef.current) {
-            // Move the grid infinitely towards the camera
             gridHelperRef.current.position.z = (state.clock.elapsedTime * 2) % 1;
         }
     });
@@ -48,29 +174,31 @@ export function ElectricalAtmosphere() {
                 </bufferGeometry>
                 <pointsMaterial
                     size={0.08}
-                    color="#60a5fa" // light blue
+                    color="#60a5fa"
                     transparent
                     opacity={0.6}
                     sizeAttenuation
-                    blending={THREE.AdditiveBlending} // Make them glow intensely when overlapping
-                    depthWrite={false} // Prevent depth sorting issues with bloom
+                    blending={THREE.AdditiveBlending}
+                    depthWrite={false}
                 />
             </points>
 
-            {/* Moving Holographic Oscilloscope Grid Floor */}
-            {/* We use a GridHelper that resets its position seamlessly based on the 1-unit size */}
+            {/* 100 Floating Electrical Components */}
+            {componentData.map((comp, i) => (
+                <FloatingComponent key={i} data={comp} />
+            ))}
+
+            {/* Moving Grid Floor */}
             <group position={[0, -4, 0]}>
                 <gridHelper
                     ref={gridHelperRef}
                     args={[100, 100, '#3b82f6', '#1e293b']}
                 />
-                {/* Fade out the grid smoothly into the distance to hide the hard edge */}
                 <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.01, 0]}>
                     <planeGeometry args={[100, 100]} />
                     <meshBasicMaterial
                         color="#020617"
                         transparent
-                        // A very simple radial gradient to fade the grid based on distance from center
                         onBeforeCompile={(shader) => {
                             shader.fragmentShader = shader.fragmentShader.replace(
                                 `#include <color_fragment>`,
