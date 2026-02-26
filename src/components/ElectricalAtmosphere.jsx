@@ -5,21 +5,21 @@ import * as THREE from 'three';
 const SHAPES = ['capacitor', 'transformer', 'resistor', 'inductor', 'diode'];
 const COLORS = ['#3b82f6', '#60a5fa', '#06b6d4', '#8b5cf6', '#10b981', '#eab308', '#f59e0b', '#ec4899'];
 
-// Generate 100 random component configs
+// Generate large floating components
 function generateComponents(count) {
     const items = [];
     for (let i = 0; i < count; i++) {
         items.push({
             shape: SHAPES[Math.floor(Math.random() * SHAPES.length)],
             position: [
-                (Math.random() - 0.5) * 40,
-                (Math.random() - 0.5) * 20,
-                -5 - Math.random() * 25,
+                (Math.random() - 0.5) * 45,
+                (Math.random() - 0.5) * 25,
+                -4 - Math.random() * 20,
             ],
             color: COLORS[Math.floor(Math.random() * COLORS.length)],
-            speed: 0.15 + Math.random() * 0.4,
-            rotSpeed: 0.3 + Math.random() * 0.8,
-            scale: 0.4 + Math.random() * 1.2,
+            speed: 0.08 + Math.random() * 0.2,
+            rotSpeed: 0.15 + Math.random() * 0.4,
+            scale: 1.5 + Math.random() * 2.5,
             offset: Math.random() * Math.PI * 2,
         });
     }
@@ -46,14 +46,25 @@ function getSharedMat(color, opacity = 0.25, emissive = false) {
 function FloatingComponent({ data }) {
     const ref = useRef();
 
-    useFrame((state) => {
+    useFrame((state, delta) => {
         if (!ref.current) return;
         const t = state.clock.elapsedTime;
-        ref.current.position.y = data.position[1] + Math.sin(t * data.speed + data.offset) * 0.8;
-        ref.current.position.x = data.position[0] + Math.cos(t * data.speed * 0.5 + data.offset) * 0.4;
-        ref.current.rotation.x += data.rotSpeed * 0.008;
-        ref.current.rotation.y += data.rotSpeed * 0.012;
-        ref.current.rotation.z += data.rotSpeed * 0.004;
+        const lerpFactor = 1 - Math.pow(0.03, delta); // frame-rate independent smoothing
+
+        // Target positions with gentle sine/cosine drift
+        const targetY = data.position[1] + Math.sin(t * data.speed + data.offset) * 0.8;
+        const targetX = data.position[0] + Math.cos(t * data.speed * 0.5 + data.offset) * 0.4;
+        const targetZ = data.position[2] + Math.sin(t * data.speed * 0.3 + data.offset * 2) * 0.2;
+
+        // Smoothly lerp toward target
+        ref.current.position.x += (targetX - ref.current.position.x) * lerpFactor;
+        ref.current.position.y += (targetY - ref.current.position.y) * lerpFactor;
+        ref.current.position.z += (targetZ - ref.current.position.z) * lerpFactor;
+
+        // Smooth slow rotation
+        ref.current.rotation.x += data.rotSpeed * 0.003 * delta * 60;
+        ref.current.rotation.y += data.rotSpeed * 0.005 * delta * 60;
+        ref.current.rotation.z += data.rotSpeed * 0.002 * delta * 60;
     });
 
     const mat = getSharedMat(data.color, 0.2, true);
@@ -138,7 +149,7 @@ export function ElectricalAtmosphere() {
     const pointsRef = useRef();
     const gridHelperRef = useRef();
 
-    const componentData = useMemo(() => generateComponents(100), []);
+    const componentData = useMemo(() => generateComponents(40), []);
 
     const particlesCount = 200;
     const posArray = useMemo(() => {

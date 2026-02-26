@@ -63,6 +63,10 @@ export function About() {
                             Quick learner with a passion for technology and real-world problem solving.
                         </p>
 
+                        <p className="text-sm md:text-base text-slate-400 font-medium">
+                            🎂 Date of Birth: <span className="text-white">02 March 1999</span>
+                        </p>
+
                         <div className="mt-4 flex gap-3 flex-wrap">
                             {['Power System Fundamentals', 'AutoCAD Electrical', 'Arduino Projects', 'Electrical Design', 'E-commerce Development'].map((skill) => (
                                 <span key={skill} className="px-3 py-1.5 bg-slate-800 text-yellow-400 text-xs font-semibold rounded-full border border-slate-700 shadow-[0_0_10px_rgba(234,179,8,0.1)]">

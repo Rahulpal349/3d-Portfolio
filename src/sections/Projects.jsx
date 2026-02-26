@@ -40,7 +40,8 @@ const projectsData = [
         tech: ['React', 'JS', 'CSS', 'Image Processing'],
         tag: 'Web App',
         color: '#10b981', // green
-        date: 'Feb 2026'
+        date: 'Feb 2026',
+        link: 'https://readytoprint.rahulxgaming69.workers.dev'
     }
 ];
 
@@ -118,8 +119,8 @@ export function Projects() {
 
                             {/* Front Face */}
                             <div
-                                className="absolute inset-0 w-full h-full [backface-visibility:hidden] rounded-3xl flex flex-col justify-between p-5 md:p-8 border border-slate-700/50 overflow-hidden"
-                                style={{ backgroundColor: '#0f172a' }}
+                                className="absolute inset-0 w-full h-full [backface-visibility:hidden] rounded-3xl flex flex-col justify-between p-5 md:p-8 border border-white/10 overflow-hidden backdrop-blur-xl"
+                                style={{ backgroundColor: 'rgba(15, 23, 42, 0.6)' }}
                             >
                                 {/* Glowing border accent matching project color */}
                                 <div
@@ -127,19 +128,19 @@ export function Projects() {
                                     style={{ boxShadow: `inset 0 0 30px ${project.color}40`, border: `1px solid ${project.color}` }}
                                 />
 
-                                <div className="relative z-10 flex flex-col h-full">
-                                    <div className="flex justify-between items-start mb-6">
+                                <div className="relative z-10 flex flex-col h-full items-center text-center">
+                                    <div className="flex justify-between items-start w-full mb-auto">
                                         <span
                                             className="inline-block px-3 py-1 rounded-full text-xs font-bold"
                                             style={{ backgroundColor: `${project.color}20`, color: project.color, border: `1px solid ${project.color}50` }}
                                         >
                                             {project.tag}
                                         </span>
-                                        <span className="text-sm font-semibold text-slate-400">
+                                        <span className="text-xs font-semibold text-slate-400">
                                             {project.date}
                                         </span>
                                     </div>
-                                    <h3 className="text-xl md:text-3xl font-bold text-white mb-4 leading-tight">
+                                    <h3 className="text-lg md:text-2xl font-bold text-white leading-tight">
                                         {project.title}
                                     </h3>
                                 </div>
@@ -154,8 +155,8 @@ export function Projects() {
 
                             {/* Back Face */}
                             <div
-                                className="absolute inset-0 w-full h-full [backface-visibility:hidden] [transform:rotateY(180deg)] rounded-3xl p-5 md:p-8 flex flex-col justify-center border border-slate-700/50 overflow-y-auto"
-                                style={{ backgroundColor: '#1e293b' }}
+                                className="absolute inset-0 w-full h-full [backface-visibility:hidden] [transform:rotateY(180deg)] rounded-3xl p-5 md:p-6 flex flex-col justify-center items-center text-center border border-white/10 backdrop-blur-xl"
+                                style={{ backgroundColor: 'rgba(30, 41, 59, 0.7)' }}
                             >
                                 {/* Glowing core effect on back */}
                                 <div
@@ -164,13 +165,13 @@ export function Projects() {
                                 />
 
                                 <div className="relative z-10">
-                                    <p className="text-slate-300 text-sm md:text-lg leading-relaxed mb-4 md:mb-8">
+                                    <p className="text-slate-300 text-xs md:text-sm leading-relaxed mb-3">
                                         {project.desc}
                                     </p>
 
-                                    <div className="flex flex-wrap gap-2 mb-6">
+                                    <div className="flex flex-wrap justify-center gap-1.5 mb-4">
                                         {project.tech.map((t) => (
-                                            <span key={t} className="px-2 py-1 bg-slate-900 rounded text-sm text-slate-400 border border-slate-700">
+                                            <span key={t} className="px-2 py-0.5 bg-slate-900/80 rounded text-xs text-slate-400 border border-slate-700">
                                                 {t}
                                             </span>
                                         ))}

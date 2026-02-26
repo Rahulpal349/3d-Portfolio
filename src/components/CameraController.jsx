@@ -83,23 +83,16 @@ export function CameraController() {
         return () => ctx.revert();
     }, [camera, scene]);
 
-    // Continuous subtle effects
+    // Continuous subtle effects — slow gentle sway only (no vibration)
     useFrame((state, delta) => {
         humTime.current += delta;
         const t = humTime.current;
 
-        // Gentle breathing sway based on scroll position
-        const breatheIntensity = 0.002 + scrollProgress.current * 0.003;
-        const swayX = Math.sin(t * 0.8) * breatheIntensity;
-        const swayY = Math.cos(t * 0.6) * breatheIntensity;
+        // Very slow, gentle breathing sway
+        const swayX = Math.sin(t * 0.3) * 0.001;
+        const swayY = Math.cos(t * 0.2) * 0.001;
 
-        // Micro electrical hum vibration (faster, subtler)
-        const humX = Math.sin(t * 35) * 0.001;
-        const humY = Math.cos(t * 42) * 0.001;
-
-        // Apply rotation-based effects (don't conflict with GSAP position tweens)
-        camera.rotation.z = Math.sin(t * 0.5) * 0.003 + swayX + humX;
-        camera.rotation.y = swayY + humY;
+        camera.rotation.z = swayX;
     });
 
     return null;

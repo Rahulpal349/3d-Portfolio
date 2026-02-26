@@ -19,12 +19,12 @@ const educationData = [
         school: "Birla Institute of Technology",
         duration: "2017 – 2020",
         location: "Kolkata, India",
-        score: "Percentage: 84.7%"
+        score: "84.7%"
     },
     {
         id: 3,
         degree: "Higher Secondary",
-        school: "Beliatore High School",
+        school: "Beliatore High School (H.S)",
         duration: "2014 – 2016",
         location: "Bankura",
         score: "79.8%"
@@ -32,9 +32,9 @@ const educationData = [
     {
         id: 4,
         degree: "Secondary Exam",
-        school: "Barkura High School",
+        school: "Barkura High School (H.S)",
         duration: "2013 – 2014",
-        location: "",
+        location: "Bankura",
         score: "85.71%"
     }
 ];
