@@ -54,32 +54,32 @@ export function Hero() {
             {/* Background Voltage Pulse Effect */}
             <div
                 ref={pulseRef}
-                className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[300px] bg-blue-600/20 rounded-[100%] blur-[120px] mix-blend-screen pointer-events-none opacity-0"
+                className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] md:w-[600px] h-[150px] md:h-[300px] bg-blue-600/20 rounded-[100%] blur-[80px] md:blur-[120px] mix-blend-screen pointer-events-none opacity-0"
             />
 
             <div className="z-10 text-center flex flex-col items-center">
                 <h1
                     ref={nameRef}
-                    className="text-6xl md:text-8xl font-black tracking-tighter mb-6 text-transparent bg-clip-text bg-gradient-to-br from-slate-100 to-slate-400 drop-shadow-[0_0_15px_rgba(59,130,246,0.5)]"
+                    className="text-5xl md:text-8xl font-black tracking-tighter mb-4 md:mb-6 text-transparent bg-clip-text bg-gradient-to-br from-slate-100 to-slate-400 drop-shadow-[0_0_15px_rgba(59,130,246,0.5)]"
                 >
                     RAHUL PAL
                 </h1>
 
                 <h2
                     ref={subtitleRef}
-                    className="text-xl md:text-2xl font-medium text-blue-300 tracking-wide mb-10 flex flex-wrap justify-center gap-2 md:gap-4"
+                    className="text-base md:text-2xl font-medium text-blue-300 tracking-wide mb-8 md:mb-10 flex flex-wrap justify-center gap-2 md:gap-4"
                 >
                     <span>Electrical Engineer</span>
                     <span className="text-yellow-400/70 hidden md:inline">|</span>
                     <span>Power Systems</span>
                     <span className="text-yellow-400/70 hidden md:inline">|</span>
-                    <span>Automation</span>
+                    <span>Web Development</span>
                 </h2>
 
                 <button
                     ref={btnRef}
                     onClick={() => document.getElementById('projects')?.scrollIntoView({ behavior: 'smooth' })}
-                    className="pointer-events-auto group relative px-8 py-4 bg-transparent overflow-hidden rounded-full border border-blue-500/50 hover:border-blue-400 transition-colors duration-300"
+                    className="pointer-events-auto group relative px-6 md:px-8 py-3 md:py-4 bg-transparent overflow-hidden rounded-full border border-blue-500/50 hover:border-blue-400 transition-colors duration-300"
                 >
                     {/* Button Background Hover Effect */}
                     <div className="absolute inset-0 bg-blue-600/10 group-hover:bg-blue-500/20 transition-colors duration-300 translate-y-full group-hover:translate-y-0 ease-out" />

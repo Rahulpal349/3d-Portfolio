@@ -77,7 +77,7 @@ export function Skills() {
         <section
             id="skills"
             ref={containerRef}
-            className="relative w-full min-h-screen flex flex-col items-center justify-center py-20 px-4 md:px-20 z-10 pointer-events-auto"
+            className="relative w-full flex flex-col items-center justify-center py-20 md:py-24 px-4 md:px-20 z-10 pointer-events-auto"
         >
             <div className="absolute inset-0 bg-slate-950/80 backdrop-blur-md pointer-events-none -z-10" />
 
@@ -85,7 +85,7 @@ export function Skills() {
                 Technical <span className="text-blue-500">Circuitry</span>
             </h2>
 
-            <div className="relative w-full max-w-5xl h-[600px] border border-slate-800/50 rounded-3xl bg-slate-900/40 shadow-2xl">
+            <div className="relative w-full max-w-5xl h-[450px] md:h-[600px] border border-slate-800/50 rounded-3xl bg-slate-900/40 shadow-2xl">
 
                 {/* SVG for Wires */}
                 <svg ref={svgRef} className="absolute inset-0 w-full h-full pointer-events-none">

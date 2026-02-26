@@ -35,12 +35,12 @@ export function About() {
         <section
             id="about"
             ref={containerRef}
-            className="relative w-full flex items-center justify-center px-6 md:px-20 py-24 pointer-events-auto"
+            className="relative w-full flex items-center justify-center px-4 md:px-20 py-20 md:py-24 pointer-events-auto"
         >
             <div className="max-w-4xl w-full">
 
                 {/* Text Content */}
-                <div className="relative p-8 md:p-12">
+                <div className="relative p-6 md:p-12">
                     {/* Glowing border accents */}
                     <div className="absolute inset-0 border border-blue-500/20 rounded-3xl pointer-events-none" />
                     <div className="absolute inset-0 bg-gradient-to-br from-blue-600/5 to-transparent rounded-3xl pointer-events-none" />

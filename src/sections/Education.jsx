@@ -75,7 +75,7 @@ export function Education() {
         <section
             id="education"
             ref={containerRef}
-            className="relative w-full py-24 px-6 md:px-20 z-10 pointer-events-auto"
+            className="relative w-full py-20 md:py-24 px-4 md:px-20 z-10 pointer-events-auto"
         >
             <div className="max-w-4xl mx-auto">
                 <h2 className="text-4xl md:text-6xl font-black text-white mb-16 md:text-center">

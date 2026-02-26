@@ -92,7 +92,7 @@ export function Experience() {
         <section
             id="experience"
             ref={containerRef}
-            className="relative w-full py-24 px-6 md:px-20 z-10 pointer-events-auto"
+            className="relative w-full py-20 md:py-24 px-4 md:px-20 z-10 pointer-events-auto"
         >
             <div className="max-w-4xl mx-auto">
                 <h2 className="text-4xl md:text-6xl font-black text-white mb-20 md:text-center">
@@ -131,7 +131,7 @@ export function Experience() {
                                         <div className="absolute inset-0 bg-blue-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-2xl pointer-events-none" />
 
                                         <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-2 gap-2">
-                                            <h3 className="text-2xl font-bold text-white leading-tight">
+                                            <h3 className="text-lg md:text-2xl font-bold text-white leading-tight">
                                                 {job.title}
                                             </h3>
                                             <span className="shrink-0 px-3 py-1 bg-blue-500/20 text-blue-400 text-xs font-bold uppercase tracking-wider rounded-full border border-blue-500/30">

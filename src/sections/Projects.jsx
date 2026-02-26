@@ -73,46 +73,30 @@ export function Projects() {
         return () => ctx.revert();
     }, []);
 
-    // Use a slight 3D hover tilt effect alongside the flip
+    const isTouchDevice = typeof window !== 'undefined' && ('ontouchstart' in window);
+
     const handleMouseMove = (e, index) => {
+        if (isTouchDevice) return;
         const card = cardsRef.current[index];
         if (!card) return;
-
         const rect = card.getBoundingClientRect();
-        const x = e.clientX - rect.left; // x position within the element
-        const y = e.clientY - rect.top;  // y position within the element
-
-        // Calculate rotation (-10 to 10 degrees)
-        const rotateX = ((y / rect.height) - 0.5) * -20;
-        const rotateY = ((x / rect.width) - 0.5) * 20;
-
-        gsap.to(card, {
-            rotateX,
-            rotateY,
-            duration: 0.5,
-            ease: 'power2.out',
-            transformPerspective: 1000,
-            transformOrigin: 'center'
-        });
+        const rotateX = ((e.clientY - rect.top) / rect.height - 0.5) * -20;
+        const rotateY = ((e.clientX - rect.left) / rect.width - 0.5) * 20;
+        gsap.to(card, { rotateX, rotateY, duration: 0.5, ease: 'power2.out', transformPerspective: 1000, transformOrigin: 'center' });
     };
 
     const handleMouseLeave = (index) => {
+        if (isTouchDevice) return;
         const card = cardsRef.current[index];
         if (!card) return;
-
-        gsap.to(card, {
-            rotateX: 0,
-            rotateY: 0,
-            duration: 0.5,
-            ease: 'power2.out'
-        });
+        gsap.to(card, { rotateX: 0, rotateY: 0, duration: 0.5, ease: 'power2.out' });
     };
 
     return (
         <section
             id="projects"
             ref={containerRef}
-            className="relative w-full min-h-screen py-24 px-6 md:px-20 z-10 pointer-events-auto"
+            className="relative w-full py-20 md:py-24 px-4 md:px-20 z-10 pointer-events-auto"
         >
             <div className="absolute inset-0 bg-slate-950/70 backdrop-blur-sm pointer-events-none -z-10" />
 
@@ -125,7 +109,7 @@ export function Projects() {
                     <div
                         key={project.id}
                         ref={el => cardsRef.current[index] = el}
-                        className="group relative h-[420px] w-full cursor-pointer [perspective:1000px]"
+                        className="group relative h-[350px] md:h-[420px] w-full cursor-pointer [perspective:1000px]"
                         onMouseMove={(e) => handleMouseMove(e, index)}
                         onMouseLeave={() => handleMouseLeave(index)}
                     >
@@ -134,8 +118,8 @@ export function Projects() {
 
                             {/* Front Face */}
                             <div
-                                className="absolute inset-0 w-full h-full [backface-visibility:hidden] rounded-3xl flex flex-col justify-between p-8 border border-slate-700/50 overflow-hidden"
-                                style={{ backgroundColor: '#0f172a' }} // tailwind slate-900 equivalent constant for inline
+                                className="absolute inset-0 w-full h-full [backface-visibility:hidden] rounded-3xl flex flex-col justify-between p-5 md:p-8 border border-slate-700/50 overflow-hidden"
+                                style={{ backgroundColor: '#0f172a' }}
                             >
                                 {/* Glowing border accent matching project color */}
                                 <div
@@ -155,7 +139,7 @@ export function Projects() {
                                             {project.date}
                                         </span>
                                     </div>
-                                    <h3 className="text-3xl font-bold text-white mb-4 leading-tight">
+                                    <h3 className="text-xl md:text-3xl font-bold text-white mb-4 leading-tight">
                                         {project.title}
                                     </h3>
                                 </div>
@@ -170,8 +154,8 @@ export function Projects() {
 
                             {/* Back Face */}
                             <div
-                                className="absolute inset-0 w-full h-full [backface-visibility:hidden] [transform:rotateY(180deg)] rounded-3xl p-8 flex flex-col justify-center border border-slate-700/50"
-                                style={{ backgroundColor: '#1e293b' }} // tailwind slate-800
+                                className="absolute inset-0 w-full h-full [backface-visibility:hidden] [transform:rotateY(180deg)] rounded-3xl p-5 md:p-8 flex flex-col justify-center border border-slate-700/50 overflow-y-auto"
+                                style={{ backgroundColor: '#1e293b' }}
                             >
                                 {/* Glowing core effect on back */}
                                 <div
@@ -180,7 +164,7 @@ export function Projects() {
                                 />
 
                                 <div className="relative z-10">
-                                    <p className="text-slate-300 text-lg leading-relaxed mb-8">
+                                    <p className="text-slate-300 text-sm md:text-lg leading-relaxed mb-4 md:mb-8">
                                         {project.desc}
                                     </p>
 
