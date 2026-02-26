@@ -149,9 +149,10 @@ export function ElectricalAtmosphere() {
     const pointsRef = useRef();
     const gridHelperRef = useRef();
 
-    const componentData = useMemo(() => generateComponents(40), []);
+    const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
+    const componentData = useMemo(() => generateComponents(isMobile ? 15 : 40), []);
 
-    const particlesCount = 200;
+    const particlesCount = isMobile ? 80 : 200;
     const posArray = useMemo(() => {
         const positions = new Float32Array(particlesCount * 3);
         for (let i = 0; i < particlesCount * 3; i++) {

@@ -62,7 +62,7 @@ export function Contact() {
 
             <div
                 ref={cardRef}
-                className="relative w-full max-w-4xl bg-slate-900/60 backdrop-blur-xl rounded-2xl p-8 md:p-16 shadow-2xl"
+                className="relative w-full max-w-5xl bg-slate-900/60 backdrop-blur-xl rounded-2xl p-8 md:p-16 shadow-2xl"
             >
                 {/* Animated SVG Border */}
                 <svg className="absolute inset-0 w-full h-full pointer-events-none rounded-2xl" preserveAspectRatio="none">
@@ -117,7 +117,7 @@ export function Contact() {
                             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path></svg>
                             Phone
                         </h3>
-                        <a href="tel:9679727399" className="text-base md:text-xl text-white hover:text-yellow-400 font-medium transition-colors duration-300">9679727399</a>
+                        <a href="https://wa.me/919679727399" target="_blank" rel="noopener noreferrer" className="text-base md:text-xl text-white hover:text-yellow-400 font-medium transition-colors duration-300 whitespace-nowrap">+91 9679727399</a>
                     </div>
                 </div>
             </div>

@@ -70,9 +70,9 @@ export function Hero() {
                     className="text-base md:text-2xl font-medium text-blue-300 tracking-wide mb-8 md:mb-10 flex flex-wrap justify-center gap-2 md:gap-4"
                 >
                     <span>Electrical Engineer</span>
-                    <span className="text-yellow-400/70 hidden md:inline">|</span>
+                    <span className="text-yellow-400/70">|</span>
                     <span>Power Systems</span>
-                    <span className="text-yellow-400/70 hidden md:inline">|</span>
+                    <span className="text-yellow-400/70">|</span>
                     <span>Web Development</span>
                 </h2>
 

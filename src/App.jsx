@@ -21,6 +21,7 @@ const ElectricalAtmosphere = lazy(() => import('./components/ElectricalAtmospher
 
 function App() {
   const [isStarted, setIsStarted] = useState(false);
+  const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
 
   return (
     <>
@@ -35,10 +36,10 @@ function App() {
         {/* 3D Canvas Background (Fixed behind scrolling content) */}
         <div className="fixed inset-0 z-0">
           <Canvas
-            dpr={[1, 2]} // Performance optimization: cap pixel ratio at 2
-            gl={{ antialias: true }} // Smooth edges
-            shadows // Enable shadows on the Canvas
-            camera={{ fov: window.innerWidth < 768 ? 75 : 60, position: [0, 0, 7] }}
+            dpr={isMobile ? [1, 1.5] : [1, 2]}
+            gl={{ antialias: !isMobile }}
+            shadows={!isMobile}
+            camera={{ fov: isMobile ? 75 : 60, position: [0, 0, 7] }}
           >
             {/* GSAP Scroll Trigger Control logic */}
             <CameraController />
@@ -73,7 +74,7 @@ function App() {
             {/* Post Processing Glow */}
             <EffectComposer>
               <Bloom
-                intensity={1.5}
+                intensity={isMobile ? 0.8 : 1.5}
                 luminanceThreshold={0.5}
                 luminanceSmoothing={0.9}
               />
