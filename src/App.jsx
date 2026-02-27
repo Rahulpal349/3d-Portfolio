@@ -14,6 +14,7 @@ import { Languages } from './sections/Languages';
 import { Interests } from './sections/Interests';
 import { Projects } from './sections/Projects';
 import { Contact } from './sections/Contact';
+import { ScrollTutorial } from './components/ScrollTutorial';
 
 // Lazy Load heavy 3D elements
 const ElectricalCoil = lazy(() => import('./components/ElectricalCoil').then(m => ({ default: m.ElectricalCoil })));
@@ -26,6 +27,7 @@ function App() {
   return (
     <>
       {!isStarted && <LoadingScreen onStarted={() => setIsStarted(true)} />}
+      <ScrollTutorial isStarted={isStarted} />
 
       {/* Add the ID that CameraController targets for ScrollTrigger */}
       <main

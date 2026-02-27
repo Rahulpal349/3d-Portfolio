@@ -14,3 +14,23 @@
 #root {
   @apply min-h-screen flex flex-col w-full;
 }
+
+/* Scroll tutorial swipe-up hand animation */
+@keyframes swipe-up {
+  0%, 100% { transform: translateY(0); opacity: 0.5; }
+  50% { transform: translateY(-18px); opacity: 1; }
+}
+
+.scroll-hand-anim {
+  animation: swipe-up 1.6s ease-in-out infinite;
+}
+
+/* Gentle bounce for the scroll tutorial container */
+@keyframes bounce-slow {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+
+.animate-bounce-slow {
+  animation: bounce-slow 2.5s ease-in-out infinite;
+}

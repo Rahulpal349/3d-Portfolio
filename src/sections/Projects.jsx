@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
@@ -11,8 +11,9 @@ const projectsData = [
         desc: 'Designed and implemented an automatic power factor correction system using Arduino to improve power efficiency.',
         tech: ['Arduino', 'Hardware', 'Power Electronics'],
         tag: 'Arduino',
-        color: '#3b82f6', // blue
-        date: 'Sept 2022'
+        color: '#3b82f6',
+        date: 'Sept 2022',
+        image: '/images/apfc.png'
     },
     {
         id: 2,
@@ -20,8 +21,9 @@ const projectsData = [
         desc: 'Designed and analyzed a 50VA transformer including core design, winding calculations, and performance testing.',
         tech: ['Analysis', 'Core Design', 'Testing'],
         tag: 'Hardware',
-        color: '#eab308', // yellow
-        date: 'Feb 2020'
+        color: '#eab308',
+        date: 'Feb 2020',
+        image: '/images/transformer.png'
     },
     {
         id: 3,
@@ -29,9 +31,10 @@ const projectsData = [
         desc: 'Designed and developed a complete e-commerce website with product listings, cart, checkout, payment and shipping integration.',
         tech: ['React', 'Node.js', 'Supabase', 'JS', 'HTML', 'CSS', 'Razorpay API', 'Delhivery API'],
         tag: 'Web Dev',
-        color: '#ec4899', // pink
+        color: '#ec4899',
         date: 'Dec 2025',
-        link: 'https://bloomandburn.shop'
+        link: 'https://bloomandburn.shop',
+        image: '/images/bloomburn.png'
     },
     {
         id: 4,
@@ -39,15 +42,17 @@ const projectsData = [
         desc: 'A web app that generates professional passport-size photos from a selfie in 30 seconds, with automatic layout to fit maximum photos on a single sheet.',
         tech: ['React', 'JS', 'CSS', 'Image Processing'],
         tag: 'Web App',
-        color: '#10b981', // green
+        color: '#10b981',
         date: 'Feb 2026',
-        link: 'https://readytoprint.rahulxgaming69.workers.dev'
+        link: 'https://readytoprint.rahulxgaming69.workers.dev',
+        image: '/images/selfiepassport.png'
     }
 ];
 
 export function Projects() {
     const containerRef = useRef(null);
     const cardsRef = useRef([]);
+    const [flippedCard, setFlippedCard] = useState(null);
 
     useEffect(() => {
         const ctx = gsap.context(() => {
@@ -75,6 +80,13 @@ export function Projects() {
     }, []);
 
     const isTouchDevice = typeof window !== 'undefined' && ('ontouchstart' in window);
+
+    const handleCardTap = (e, index) => {
+        if (!isTouchDevice) return;
+        // Don't un-flip if user tapped a link
+        if (e.target.closest('a')) return;
+        setFlippedCard(prev => prev === index ? null : index);
+    };
 
     const handleMouseMove = (e, index) => {
         if (isTouchDevice) return;
@@ -113,15 +125,30 @@ export function Projects() {
                         className="group relative h-[350px] md:h-[420px] w-full cursor-pointer [perspective:1000px]"
                         onMouseMove={(e) => handleMouseMove(e, index)}
                         onMouseLeave={() => handleMouseLeave(index)}
+                        onClick={(e) => handleCardTap(e, index)}
                     >
-                        {/* Inner Flip Container */}
-                        <div className="relative w-full h-full transition-all duration-700 [transform-style:preserve-3d] group-hover:[transform:rotateY(180deg)] shadow-2xl rounded-3xl">
+                        {/* Inner Flip Container – hover on desktop, tap-toggled on mobile */}
+                        <div
+                            className={`relative w-full h-full transition-all duration-700 [transform-style:preserve-3d] shadow-2xl rounded-3xl ${!isTouchDevice ? 'group-hover:[transform:rotateY(180deg)]' : ''
+                                }`}
+                            style={isTouchDevice && flippedCard === index ? { transform: 'rotateY(180deg)' } : {}}
+                        >
 
                             {/* Front Face */}
                             <div
-                                className="absolute inset-0 w-full h-full [backface-visibility:hidden] rounded-3xl flex flex-col justify-between p-5 md:p-8 border border-white/10 overflow-hidden backdrop-blur-xl"
-                                style={{ backgroundColor: 'rgba(15, 23, 42, 0.6)' }}
+                                className="absolute inset-0 w-full h-full [backface-visibility:hidden] rounded-3xl flex flex-col justify-between p-5 md:p-8 border border-white/10 overflow-hidden"
                             >
+                                {/* Project image as background */}
+                                {project.image && (
+                                    <img
+                                        src={project.image}
+                                        alt={project.title}
+                                        className="absolute inset-0 w-full h-full object-cover rounded-3xl"
+                                        loading="lazy"
+                                    />
+                                )}
+                                {/* Dark gradient overlay for text readability */}
+                                <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/70 to-slate-950/30 rounded-3xl" />
                                 {/* Glowing border accent matching project color */}
                                 <div
                                     className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
@@ -144,6 +171,13 @@ export function Projects() {
                                         {project.title}
                                     </h3>
                                 </div>
+
+                                {/* Tap to flip hint – mobile only */}
+                                {isTouchDevice && (
+                                    <span className="absolute bottom-4 right-4 text-xs text-slate-500 flex items-center gap-1 animate-pulse">
+                                        Tap to flip <span className="text-base">↻</span>
+                                    </span>
+                                )}
 
                                 {/* Decorative circuit lines front */}
                                 <svg className="absolute bottom-0 right-0 w-32 h-32 opacity-20 pointer-events-none" viewBox="0 0 100 100">
