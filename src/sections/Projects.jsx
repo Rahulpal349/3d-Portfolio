@@ -167,14 +167,14 @@ export function Projects() {
                                             {project.date}
                                         </span>
                                     </div>
-                                    <h3 className="text-lg md:text-2xl font-bold text-white leading-tight">
+                                    <h3 className="text-lg md:text-2xl font-bold text-white leading-tight pb-6 md:pb-0 px-2 md:px-0">
                                         {project.title}
                                     </h3>
                                 </div>
 
                                 {/* Tap to flip hint – mobile only */}
                                 {isTouchDevice && (
-                                    <span className="absolute bottom-4 right-4 z-20 text-xs text-yellow-400/70 font-semibold flex items-center gap-1.5 animate-pulse drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]">
+                                    <span className="absolute bottom-3 right-4 z-20 text-xs text-yellow-400/70 font-semibold flex items-center gap-1.5 animate-pulse drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]">
                                         Tap to flip <span className="text-sm">↻</span>
                                     </span>
                                 )}
