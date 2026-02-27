@@ -136,7 +136,7 @@ export function Projects() {
 
                             {/* Front Face */}
                             <div
-                                className="absolute inset-0 w-full h-full [backface-visibility:hidden] rounded-3xl flex flex-col justify-between p-5 md:p-8 border border-white/10 overflow-hidden"
+                                className="absolute inset-0 w-full h-full [backface-visibility:hidden] [transform:translateZ(1px)] rounded-3xl flex flex-col justify-between p-5 md:p-8 border border-white/10 overflow-hidden"
                             >
                                 {/* Project image as background */}
                                 {project.image && (
@@ -189,7 +189,7 @@ export function Projects() {
 
                             {/* Back Face */}
                             <div
-                                className="absolute inset-0 w-full h-full [backface-visibility:hidden] [transform:rotateY(180deg)] rounded-3xl p-5 md:p-6 flex flex-col justify-center items-center text-center border border-white/10 backdrop-blur-xl"
+                                className="absolute inset-0 w-full h-full [backface-visibility:hidden] [transform:rotateY(180deg)_translateZ(1px)] rounded-3xl p-5 md:p-6 flex flex-col justify-center items-center text-center border border-white/10 backdrop-blur-xl"
                                 style={{ backgroundColor: 'rgba(30, 41, 59, 0.7)' }}
                             >
                                 {/* Glowing core effect on back */}
