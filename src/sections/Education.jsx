@@ -38,7 +38,7 @@ const educationData = [
         degree: "Higher Secondary",
         school: "Beliatore High School (H.S)",
         duration: "2014 – 2016",
-        location: "Bankura",
+        location: "Bankura, West Bengal",
         score: "79.8%"
     },
     {
@@ -46,7 +46,7 @@ const educationData = [
         degree: "Secondary Exam",
         school: "Barkura High School (H.S)",
         duration: "2013 – 2014",
-        location: "Bankura",
+        location: "Bankura, West Bengal",
         score: "85.71%"
     }
 ];
