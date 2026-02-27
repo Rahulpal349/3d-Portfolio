@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
@@ -11,7 +11,13 @@ const educationData = [
         school: "OmDayal Group of Institutions",
         duration: "2020 – 2023",
         location: "Howrah, India",
-        score: "CGPA: 9.14"
+        score: "CGPA: 9.14",
+        cert: {
+            title: 'B.Tech Provisional Certificate',
+            issuer: 'Maulana Abul Kalam Azad University of Technology',
+            date: 'July 2023',
+            image: '/images/cert-btech.png'
+        }
     },
     {
         id: 2,
@@ -19,7 +25,13 @@ const educationData = [
         school: "Birla Institute of Technology",
         duration: "2017 – 2020",
         location: "Kolkata, India",
-        score: "84.7%"
+        score: "84.7%",
+        cert: {
+            title: 'Diploma in Electrical Engineering',
+            issuer: 'West Bengal State Council of Technical Education',
+            date: 'October 2020',
+            image: '/images/cert-diploma.jpg'
+        }
     },
     {
         id: 3,
@@ -42,6 +54,9 @@ const educationData = [
 export function Education() {
     const containerRef = useRef(null);
     const cardsRef = useRef([]);
+    const [selectedCert, setSelectedCert] = useState(null);
+    const modalRef = useRef(null);
+    const backdropRef = useRef(null);
 
     useEffect(() => {
         const ctx = gsap.context(() => {
@@ -71,59 +86,156 @@ export function Education() {
         return () => ctx.revert();
     }, []);
 
+    const openModal = (cert) => {
+        setSelectedCert(cert);
+        requestAnimationFrame(() => {
+            if (backdropRef.current) gsap.fromTo(backdropRef.current, { opacity: 0 }, { opacity: 1, duration: 0.3 });
+            if (modalRef.current) gsap.fromTo(modalRef.current, { opacity: 0, scale: 0.85, y: 30 }, { opacity: 1, scale: 1, y: 0, duration: 0.4, ease: 'back.out(1.7)' });
+        });
+    };
+
+    const closeModal = () => {
+        if (backdropRef.current) gsap.to(backdropRef.current, { opacity: 0, duration: 0.25 });
+        if (modalRef.current) {
+            gsap.to(modalRef.current, { opacity: 0, scale: 0.9, y: 20, duration: 0.25, ease: 'power2.in', onComplete: () => setSelectedCert(null) });
+        } else {
+            setSelectedCert(null);
+        }
+    };
+
     return (
-        <section
-            id="education"
-            ref={containerRef}
-            className="relative w-full py-20 md:py-24 px-4 md:px-20 z-10 pointer-events-auto"
-        >
-            <div className="max-w-4xl mx-auto">
-                <h2 className="text-4xl md:text-6xl font-black text-white mb-16 md:text-center">
-                    Education <span className="text-yellow-400">&</span> Academics
-                </h2>
+        <>
+            <section
+                id="education"
+                ref={containerRef}
+                className="relative w-full py-20 md:py-24 px-4 md:px-20 z-10 pointer-events-auto"
+            >
+                <div className="max-w-4xl mx-auto">
+                    <h2 className="text-4xl md:text-6xl font-black text-white mb-16 md:text-center">
+                        Education <span className="text-yellow-400">&</span> Academics
+                    </h2>
 
-                <div className="flex flex-col gap-6 perspective-[1000px]">
-                    {educationData.map((edu, index) => (
-                        <div
-                            key={edu.id}
-                            ref={el => cardsRef.current[index] = el}
-                            className="group relative bg-slate-900/60 backdrop-blur-md rounded-2xl p-6 md:p-8 border border-slate-700/50 hover:border-yellow-400/50 transition-all duration-300 transform-gpu overflow-hidden"
-                        >
-                            {/* Animated Background Gradient on Hover */}
-                            <div className="absolute inset-0 bg-gradient-to-r from-yellow-500/0 via-yellow-500/5 to-transparent -translate-x-full group-hover:translate-x-0 transition-transform duration-700 ease-out pointer-events-none" />
+                    <div className="flex flex-col gap-6 perspective-[1000px]">
+                        {educationData.map((edu, index) => (
+                            <div
+                                key={edu.id}
+                                ref={el => cardsRef.current[index] = el}
+                                onClick={() => edu.cert && openModal(edu.cert)}
+                                className={`group relative bg-slate-900/60 backdrop-blur-md rounded-2xl p-6 md:p-8 border border-slate-700/50 hover:border-yellow-400/50 transition-all duration-300 transform-gpu overflow-hidden ${edu.cert ? 'cursor-pointer hover:shadow-[0_0_20px_rgba(234,179,8,0.1)]' : ''}`}
+                            >
+                                {/* Animated Background Gradient on Hover */}
+                                <div className="absolute inset-0 bg-gradient-to-r from-yellow-500/0 via-yellow-500/5 to-transparent -translate-x-full group-hover:translate-x-0 transition-transform duration-700 ease-out pointer-events-none" />
 
-                            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 relative z-10">
-                                <div className="flex-1">
-                                    <h3 className="text-2xl font-bold text-white mb-2 group-hover:text-yellow-400 transition-colors duration-300">
-                                        {edu.degree}
-                                    </h3>
-                                    <h4 className="text-xl text-blue-400 font-medium mb-2">
-                                        {edu.school}
-                                    </h4>
-                                    <div className="flex flex-wrap items-center gap-4 text-sm text-slate-400">
-                                        <span className="flex items-center gap-1">
-                                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
-                                            {edu.duration}
-                                        </span>
-                                        {edu.location && (
+                                <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 relative z-10">
+                                    <div className="flex-1">
+                                        <h3 className="text-2xl font-bold text-white mb-2 group-hover:text-yellow-400 transition-colors duration-300">
+                                            {edu.degree}
+                                        </h3>
+                                        <h4 className="text-xl text-blue-400 font-medium mb-2">
+                                            {edu.school}
+                                        </h4>
+                                        <div className="flex flex-wrap items-center gap-4 text-sm text-slate-400">
                                             <span className="flex items-center gap-1">
-                                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
-                                                {edu.location}
+                                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                                                {edu.duration}
                                             </span>
-                                        )}
+                                            {edu.location && (
+                                                <span className="flex items-center gap-1">
+                                                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                                                    {edu.location}
+                                                </span>
+                                            )}
+                                            {edu.cert && (
+                                                <span className="flex items-center gap-1 text-yellow-500 font-semibold uppercase tracking-wider text-xs ml-auto md:ml-4 group-hover:scale-105 transition-transform duration-300">
+                                                    View Certificate
+                                                    <svg className="w-4 h-4 ml-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg>
+                                                </span>
+                                            )}
+                                        </div>
                                     </div>
-                                </div>
 
-                                <div className="mt-4 md:mt-0 flex shrink-0">
-                                    <div className="px-5 py-3 rounded-xl bg-slate-800/80 border border-slate-700 text-yellow-400 font-bold whitespace-nowrap shadow-[0_0_15px_rgba(234,179,8,0.1)] group-hover:shadow-[0_0_20px_rgba(234,179,8,0.2)] transition-shadow duration-300">
-                                        {edu.score}
+                                    <div className="mt-4 md:mt-0 flex shrink-0">
+                                        <div className="px-5 py-3 rounded-xl bg-slate-800/80 border border-slate-700 text-yellow-400 font-bold whitespace-nowrap shadow-[0_0_15px_rgba(234,179,8,0.1)] group-hover:shadow-[0_0_20px_rgba(234,179,8,0.2)] transition-shadow duration-300">
+                                            {edu.score}
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    ))}
+                        ))}
+                    </div>
                 </div>
-            </div>
-        </section>
+            </section>
+
+            {/* Certificate Popup Modal */}
+            {selectedCert && (
+                <div
+                    ref={backdropRef}
+                    className="fixed inset-0 z-50 flex items-center justify-center p-4 pointer-events-auto"
+                    style={{ backgroundColor: 'rgba(2, 6, 23, 0.85)', backdropFilter: 'blur(8px)' }}
+                    onClick={closeModal}
+                >
+                    <div
+                        ref={modalRef}
+                        className="relative max-w-4xl w-full max-h-[90vh] rounded-2xl overflow-hidden shadow-2xl border border-slate-700 bg-slate-900"
+                        onClick={e => e.stopPropagation()}
+                    >
+                        {/* Modal Header */}
+                        <div className="flex items-center justify-between p-4 border-b border-slate-700/50 bg-slate-900/50 backdrop-blur-md absolute top-0 left-0 right-0 z-10">
+                            <h3 className="text-lg font-bold text-white truncate pr-4">{selectedCert.title}</h3>
+                            <button
+                                onClick={closeModal}
+                                className="w-8 h-8 rounded-full bg-slate-800 hover:bg-slate-700 flex items-center justify-center transition-colors shrink-0"
+                            >
+                                <svg className="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+                                </svg>
+                            </button>
+                        </div>
+
+                        {/* Certificate Image */}
+                        <div className="overflow-y-auto w-full h-full max-h-[90vh] bg-black/50 flex flex-col p-4 pt-16 relative">
+                            <div className="relative w-full h-auto m-auto flex justify-center">
+                                <img
+                                    src={selectedCert.image}
+                                    alt={selectedCert.title}
+                                    className="max-w-full h-auto object-contain rounded border border-slate-700/30 shadow-xl"
+                                />
+
+                                {/* CSS Blur Overlay for B.Tech Reg No/Roll No last 4 digits */}
+                                {selectedCert.title === 'B.Tech Provisional Certificate' && (
+                                    <>
+                                        {/* Blur for last 4 digits of Roll No (approximate position) */}
+                                        <div
+                                            className="absolute bg-white/20 backdrop-blur-md border px-1 border-white/30"
+                                            style={{
+                                                top: '38.5%',
+                                                left: '52.5%',
+                                                width: '4.5%',
+                                                height: '2.5%',
+                                                borderRadius: '2px'
+                                            }}
+                                        />
+                                        {/* Blur for last 4 digits of Reg No (approximate position) */}
+                                        <div
+                                            className="absolute bg-white/20 backdrop-blur-md border px-1 border-white/30"
+                                            style={{
+                                                top: '38.5%',
+                                                left: '68.5%',
+                                                width: '5%',
+                                                height: '2.5%',
+                                                borderRadius: '2px'
+                                            }}
+                                        />
+                                    </>
+                                )}
+                            </div>
+                            <p className="text-center text-xs text-slate-500 mt-4 shrink-0">
+                                {selectedCert.issuer} · {selectedCert.date}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            )}
+        </>
     );
 }

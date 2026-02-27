@@ -174,8 +174,8 @@ export function Projects() {
 
                                 {/* Tap to flip hint – mobile only */}
                                 {isTouchDevice && (
-                                    <span className="absolute bottom-4 right-4 text-xs text-slate-500 flex items-center gap-1 animate-pulse">
-                                        Tap to flip <span className="text-base">↻</span>
+                                    <span className="absolute bottom-4 right-4 z-20 text-xs text-yellow-400/70 font-semibold flex items-center gap-1.5 animate-pulse drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]">
+                                        Tap to flip <span className="text-sm">↻</span>
                                     </span>
                                 )}
 
